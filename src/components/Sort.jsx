@@ -1,8 +1,21 @@
+import { useState } from "react";
+
 export default function Sort() {
+  const [open, setOpen] = useState(false)
+  const [chosenFilter, setChosenFilter] = useState(0)
+
+  const filter = ['популярности', 'цене', 'алфавиту']
+
+  function changeFilter(index) {
+    setChosenFilter(index)
+    setOpen(false)
+  }
+
   return (
     <div className="sort">
       <div className="sort__label">
         <svg
+          className={!open ? 'opened' : ''}
           width="10"
           height="6"
           viewBox="0 0 10 6"
@@ -15,15 +28,29 @@ export default function Sort() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span>популярности</span>
+        <span onClick={() => setOpen(!open)}>{filter[chosenFilter]}</span>
       </div>
-      <div className="sort__popup">
-        <ul>
-          <li className="active">популярности</li>
-          <li>цене</li>
-          <li>алфавиту</li>
-        </ul>
-      </div>
+      {
+        open && (
+          <div className="sort__popup">
+            <ul>
+              {
+                filter.map((item,idx) => {
+                  return(
+                    <li 
+                      key={idx} 
+                      onClick={() => changeFilter(idx)} 
+                      className={chosenFilter === idx ? 'active' : ''}
+                    >
+                      {item}
+                    </li>
+                  )
+                })
+              }
+            </ul>
+          </div>
+        )
+      }
     </div>
   );
 }
