@@ -1,21 +1,27 @@
 import { useState } from "react";
 
-export default function Sort() {
-  const [open, setOpen] = useState(false)
-  const [chosenFilter, setChosenFilter] = useState(0)
+export default function Sort({ chosenFilter, setChosenFilter }) {
+  const [open, setOpen] = useState(false);
 
-  const filter = ['популярности', 'цене', 'алфавиту']
+  const filter = [
+    { name: "популярности (убыванию)", sortProperty: "rating" },
+    { name: "популярности (возростанию)", sortProperty: "-rating" },
+    { name: "цене (убыванию)", sortProperty: "price" },
+    { name: "цене (возростанию)", sortProperty: "-price" },
+    { name: "алфавиту (убыванию)", sortProperty: "title" },
+    { name: "алфавиту (возростанию)", sortProperty: "-title" },
+  ];
 
   function changeFilter(index) {
-    setChosenFilter(index)
-    setOpen(false)
+    setChosenFilter(index);
+    setOpen(false);
   }
 
   return (
     <div className="sort">
       <div className="sort__label">
         <svg
-          className={!open ? 'opened' : ''}
+          className={!open ? "opened" : ""}
           width="10"
           height="6"
           viewBox="0 0 10 6"
@@ -28,29 +34,29 @@ export default function Sort() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setOpen(!open)}>{filter[chosenFilter]}</span>
+        <span onClick={() => setOpen(!open)}>{chosenFilter.name}</span>
       </div>
-      {
-        open && (
-          <div className="sort__popup">
-            <ul>
-              {
-                filter.map((item,idx) => {
-                  return(
-                    <li 
-                      key={idx} 
-                      onClick={() => changeFilter(idx)} 
-                      className={chosenFilter === idx ? 'active' : ''}
-                    >
-                      {item}
-                    </li>
-                  )
-                })
-              }
-            </ul>
-          </div>
-        )
-      }
+      {open && (
+        <div className="sort__popup">
+          <ul>
+            {filter.map((obj, idx) => {
+              return (
+                <li
+                  key={idx}
+                  onClick={() => changeFilter(obj)}
+                  className={
+                    chosenFilter.sortProperty === obj.sortProperty
+                      ? "active"
+                      : ""
+                  }
+                >
+                  {obj.name}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
